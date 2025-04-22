@@ -1,30 +1,33 @@
 import cv2
-from .pose_analyzer import PoseAnalyzer
-from .drawing_utils import draw_landmarks_with_angles
+import mediapipe as mp
 
 def process_video(input_path, output_path):
     cap = cv2.VideoCapture(input_path)
-    if not cap.isOpened():
-        raise Exception("❌ 無法開啟影片檔案")
-
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fps = cap.get(cv2.CAP_PROP_FPS)
-
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+    w, h = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    out = cv2.VideoWriter(output_path, fourcc, 30, (w, h))
 
-    analyzer = PoseAnalyzer()
+    mp_pose = mp.solutions.pose
+    pose = mp_pose.Pose()
+    mp_drawing = mp.solutions.drawing_utils
 
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
             break
 
-        landmarks, angles = analyzer.process_frame(frame)
-        frame_with_info = draw_landmarks_with_angles(frame, landmarks, angles)
-        out.write(frame_with_info)
+        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = pose.process(rgb)
+
+        if results.pose_landmarks:
+            mp_drawing.draw_landmarks(
+                frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                landmark_drawing_spec=mp_drawing.DrawingSpec(color=(0, 255, 255), thickness=2, circle_radius=2),
+                connection_drawing_spec=mp_drawing.DrawingSpec(color=(255, 255, 255), thickness=2)
+            )
+
+        out.write(frame)
 
     cap.release()
     out.release()
-
+    return output_path
