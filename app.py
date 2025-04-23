@@ -1,3 +1,4 @@
+st.text("🔖 版本 v20250423-1")
 import streamlit as st
 import tempfile
 from analyzer.video_processor import process_video
