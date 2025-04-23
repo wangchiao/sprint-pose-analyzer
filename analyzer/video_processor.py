@@ -1,10 +1,8 @@
-
 import cv2
 import mediapipe as mp
 import numpy as np
 from analyzer.pose_analyzer import calculate_angle
 from analyzer.drawing_utils import draw_angle_text
-
 
 def process_video(input_path, output_path):
     cap = cv2.VideoCapture(input_path)
@@ -46,16 +44,12 @@ def process_video(input_path, output_path):
                 l_elbow = get_point(mp_pose.PoseLandmark.LEFT_ELBOW.value)
                 r_elbow = get_point(mp_pose.PoseLandmark.RIGHT_ELBOW.value)
 
-                draw_angle_text(frame, "l_knee", l_knee, calculate_angle(l_hip, l_knee, l_ankle), (-30, -10))
-                draw_angle_text(frame, "r_knee", r_knee, calculate_angle(r_hip, r_knee, r_ankle), (20, -10))
-                draw_angle_text(frame, "l_ankle", l_ankle, calculate_angle(l_knee, l_ankle, l_foot), (-30, 20))
-                draw_angle_text(frame, "r_ankle", r_ankle, calculate_angle(r_knee, r_ankle, r_foot), (20, 20))
-                draw_angle_text(frame, "l_shoulder", l_shoulder, calculate_angle(l_elbow, l_shoulder, l_hip), (-40, -20))
-                draw_angle_text(frame, "r_shoulder", r_shoulder, calculate_angle(r_elbow, r_shoulder, r_hip), (30, -20))
-
-                pelvis_center = ((l_hip + r_hip) / 2).astype(int)
-                pelvis_y = (l_hip[1] + r_hip[1]) / 2
-                draw_angle_text(frame, "pelvis_height", pelvis_center, pelvis_y, (0, 10))
+                draw_angle_text(frame, l_knee, calculate_angle(l_hip, l_knee, l_ankle))
+                draw_angle_text(frame, r_knee, calculate_angle(r_hip, r_knee, r_ankle))
+                draw_angle_text(frame, l_ankle, calculate_angle(l_knee, l_ankle, l_foot))
+                draw_angle_text(frame, r_ankle, calculate_angle(r_knee, r_ankle, r_foot))
+                draw_angle_text(frame, l_shoulder, calculate_angle(l_elbow, l_shoulder, l_hip))
+                draw_angle_text(frame, r_shoulder, calculate_angle(r_elbow, r_shoulder, r_hip))
 
             except:
                 pass

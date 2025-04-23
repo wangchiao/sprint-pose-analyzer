@@ -1,4 +1,3 @@
-
 import numpy as np
 
 def calculate_angle(a, b, c):
