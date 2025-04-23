@@ -1,4 +1,4 @@
-opencv-python-headless
-mediapipe
+opencv-python-headless==4.5.5.64
+mediapipe==0.10.3
 numpy
 streamlit
