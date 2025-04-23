@@ -1,10 +1,12 @@
-st.text("🆔 版本號v20250423-clean")
 import streamlit as st
 import tempfile
 import os
 from analyzer.video_processor import process_video
 
+
 st.set_page_config(page_title="Sprint Pose Analyzer", layout="centered")
+
+st.text("🆔 版本號v20250423-clean")
 
 st.title("🏃‍♂️ Sprint Pose Analyzer")
 st.caption("請上傳短跑影片，系統會即時標註關節角度與骨架")
